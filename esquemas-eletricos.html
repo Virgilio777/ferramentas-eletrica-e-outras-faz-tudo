@@ -1,1 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Esquemas de Ligação</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #111;
+      margin: 0;
+      padding: 16px;
+      color: #fff;
+    }
+    .container { max-width: 600px; margin: 0 auto; }
+    .header {
+      background: #c62828;
+      padding: 20px;
+      border-radius: 14px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header h1 { margin: 0; font-size: 22px; }
+    .header a { color: white; text-decoration: none; font-size: 14px; }
+    .esquema {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+    .esquema h2 { margin: 0 0 10px; color: #ff5252; font-size: 18px; }
+    .esquema p { margin: 6px 0; color: #ccc; line-height: 1.5; }
+    .esquema ul { margin: 8px 0; padding-left: 20px; color: #ddd; }
+    .esquema li { margin: 4px 0; }
+    .voltar { display: block; text-align: center; margin-top: 20px; color: #aaa; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Esquemas de Ligação</h1>
+      <a href="index.html">← Voltar ao menu</a>
+    </div>
 
+    <div class="esquema">
+      <h2>Interruptor Simples</h2>
+      <p>Um interruptor controlando uma lâmpada.</p>
+      <ul>
+        <li>Fase → Interruptor → Lâmpada → Neutro</li>
+        <li>O retorno sai do interruptor e vai até a lâmpada</li>
+      </ul>
+    </div>
+
+    <div class="esquema">
+      <h2>Interruptor Paralelo (Two-Way)</h2>
+      <p>Dois interruptores controlando a mesma lâmpada (escada, corredor).</p>
+      <ul>
+        <li>Fase → Interruptor 1 → Intermediários → Interruptor 2 → Lâmpada → Neutro</li>
+        <li>Usa cabos de retorno entre os dois interruptores</li>
+      </ul>
+    </div>
+
+    <div class="esquema">
+      <h2>Tomada Simples</h2>
+      <ul>
+        <li>Fase → Tomada</li>
+        <li>Neutro → Tomada</li>
+        <li>Terra → Tomada (quando houver)</li>
+      </ul>
+    </div>
+
+    <div class="esquema">
+      <h2>Chuveiro Elétrico</h2>
+      <ul>
+        <li>Fase → Disjuntor exclusivo → Chuveiro</li>
+        <li>Neutro → Chuveiro</li>
+        <li>Terra obrigatório</li>
+        <li>Bitola mínima geralmente 4 mm² ou 6 mm² (conforme potência)</li>
+      </ul>
+    </div>
+
+    <div class="esquema">
+      <h2>Interruptor Intermediário (Three-Way)</h2>
+      <p>Três ou mais pontos de comando para a mesma lâmpada.</p>
+      <ul>
+        <li>Usa interruptor intermediário no meio do circuito</li>
+        <li>Mais complexo — recomenda-se atenção ou eletricista</li>
+      </ul>
+    </div>
+
+    <a class="voltar" href="index.html">← Voltar ao menu</a>
+  </div>
+</body>
+</html>
