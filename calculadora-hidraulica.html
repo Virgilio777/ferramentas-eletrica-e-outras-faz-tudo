@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Hidráulica</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0d47a1;
+      margin: 0;
+      padding: 20px;
+      color: #e3f2fd;
+    }
+    .container { max-width: 540px; margin: 0 auto; }
+    .header {
+      background: linear-gradient(135deg, #1565c0, #0d47a1);
+      padding: 28px 20px;
+      border-radius: 16px;
+      text-align: center;
+      margin-bottom: 24px;
+      border: 2px solid #000;
+    }
+    .header h1 { margin: 0; font-size: 24px; }
+    .header p { margin: 8px 0 0; opacity: 0.9; }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .tab {
+      flex: 1;
+      padding: 10px;
+      background: #1565c0;
+      border: 2px solid #000;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .tab.active { background: #0d47a1; }
+    .card {
+      background: #1565c0;
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 24px;
+    }
+    label { display: block; font-weight: 600; margin-bottom: 6px; margin-top: 14px; }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 2px solid #000;
+      background: #0d47a1;
+      color: #e3f2fd;
+    }
+    button {
+      width: 100%;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      background: #1976d2;
+      color: white;
+      border: 3px solid #000;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover { background: #1565c0; }
+    .resultado {
+      margin-top: 20px;
+      padding: 16px;
+      background: #0d47a1;
+      border-radius: 10px;
+      border: 2px solid #000;
+      display: none;
+    }
+    .resultado h3 { margin: 0 0 10px; color: #bbdefb; }
+    .info { font-size: 13px; color: #bbdefb; margin-top: 12px; text-align: center; }
+    .secao { display: none; }
+    .secao.active { display: block; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Calculadora de Hidráulica</h1>
+      <p>Pluvial, Descarte, Encanada e Consumo</p>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="mostrar('pluvial')">Pluvial</div>
+      <div class="tab" onclick="mostrar('descarte')">Descarte</div>
+      <div class="tab" onclick="mostrar('encanada')">Encanada</div>
+      <div class="tab" onclick="mostrar('consumo')">Consumo</div>
+    </div>
+
+    <!-- PLUVIAL -->
+    <div id="pluvial" class="card secao active">
+      <h3>Água Pluvial</h3>
+      <label>Área do telhado (m²)</label>
+      <input type="number" id="areaTelhado" placeholder="Ex: 80" step="1">
+      <label>Inclinação do tubo</label>
+      <select id="inclinacaoPluvial">
+        <option value="1">1% (mínima)</option>
+        <option value="2">2%</option>
+        <option value="3">3% ou mais</option>
+      </select>
+      <button onclick="calcPluvial()">Calcular</button>
+      <div class="resultado" id="resPluvial"></div>
+    </div>
+
+    <!-- DESCARTE -->
+    <div id="descarte" class="card secao">
+      <h3>Água de Descarte</h3>
+      <label>Tipo</label>
+      <select id="tipoDescarte">
+        <option value="ralo">Ralo / Pia / Tanque</option>
+        <option value="vaso">Vaso sanitário</option>
+        <option value="geral">Ramal geral residencial</option>
+      </select>
+      <button onclick="calcDescarte()">Calcular</button>
+      <div class="resultado" id="resDescarte"></div>
+    </div>
+
+    <!-- ENCANADA -->
+    <div id="encanada" class="card secao">
+      <h3>Água Fria (Encanada)</h3>
+      <label>Tipo de instalação</label>
+      <select id="tipoEncanada">
+        <option value="residencial">Residencial (casa)</option>
+        <option value="predial">Predial (apartamento)</option>
+      </select>
+      <label>Número de pontos de água</label>
+      <input type="number" id="pontos" placeholder="Ex: 8" min="1">
+      <button onclick="calcEncanada()">Calcular</button>
+      <div class="resultado" id="resEncanada"></div>
+    </div>
+
+    <!-- CONSUMO -->
+    <div id="consumo" class="card secao">
+      <h3>Consumo de Água</h3>
+      <label>Número de pessoas</label>
+      <input type="number" id="pessoas" placeholder="Ex: 4" min="1">
+      <label>Tipo</label>
+      <select id="tipoConsumo">
+        <option value="residencial">Residencial</option>
+        <option value="predial">Predial</option>
+      </select>
+      <button onclick="calcConsumo()">Calcular</button>
+      <div class="resultado" id="resConsumo"></div>
+    </div>
+
+    <p class="info">Valores estimados para uso prático do faz-tudo. Consulte sempre as normas quando necessário.</p>
+  </div>
+
+  <script>
+    function mostrar(id) {
+      document.querySelectorAll('.secao').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    function calcPluvial() {
+      const area = parseFloat(document.getElementById("areaTelhado").value) || 0;
+      if (area <= 0) return alert("Informe a área do telhado.");
+      let diametro = "75 mm";
+      if (area > 50) diametro = "100 mm";
+      if (area > 100) diametro = "150 mm";
+      document.getElementById("resPluvial").innerHTML = `<h3>Resultado</h3><p>Diâmetro recomendado: <strong>${diametro}</strong><br>Para ${area} m² de telhado.</p>`;
+      document.getElementById("resPluvial").style.display = "block";
+    }
+
+    function calcDescarte() {
+      const tipo = document.getElementById("tipoDescarte").value;
+      let texto = "";
+      if (tipo === "ralo") texto = "Diâmetro recomendado: <strong>40 mm</strong> ou 50 mm";
+      if (tipo === "vaso") texto = "Diâmetro recomendado: <strong>100 mm</strong>";
+      if (tipo === "geral") texto = "Diâmetro recomendado: <strong>100 mm</strong> (ramal principal)";
+      document.getElementById("resDescarte").innerHTML = `<h3>Resultado</h3><p>${texto}</p>`;
+      document.getElementById("resDescarte").style.display = "block";
+    }
+
+    function calcEncanada() {
+      const tipo = document.getElementById("tipoEncanada").value;
+      const pontos = parseInt(document.getElementById("pontos").value) || 0;
+      if (pontos <= 0) return alert("Informe o número de pontos.");
+      let diametro = "25 mm (3/4\")";
+      if (tipo === "residencial" && pontos > 6) diametro = "32 mm (1\")";
+      if (tipo === "predial") diametro = pontos > 10 ? "40 mm" : "32 mm";
+      document.getElementById("resEncanada").innerHTML = `<h3>Resultado</h3><p>Diâmetro recomendado da coluna / ramal: <strong>${diametro}</strong></p>`;
+      document.getElementById("resEncanada").style.display = "block";
+    }
+
+    function calcConsumo() {
+      const pessoas = parseInt(document.getElementById("pessoas").value) || 0;
+      if (pessoas <= 0) return alert("Informe o número de pessoas.");
+      const tipo = document.getElementById("tipoConsumo").value;
+      const litrosDia = tipo === "residencial" ? pessoas * 150 : pessoas * 200;
+      document.getElementById("resConsumo").innerHTML = `<h3>Resultado</h3><p>Consumo estimado: <strong>\( {litrosDia} litros/dia</strong><br>( \){(litrosDia/1000).toFixed(1)} m³/dia)</p>`;
+      document.getElementById("resConsumo").style.display = "block";
+    }
+  </script>
+</body>
+</html>
