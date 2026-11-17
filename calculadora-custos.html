@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Custos de Obra</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #424242;
+      margin: 0;
+      padding: 20px;
+      color: #fff;
+    }
+    .container { max-width: 540px; margin: 0 auto; }
+    .header {
+      background: linear-gradient(135deg, #ff6f00, #e65100);
+      padding: 28px 20px;
+      border-radius: 16px;
+      text-align: center;
+      margin-bottom: 24px;
+      border: 2px solid #000;
+    }
+    .header h1 { margin: 0; font-size: 24px; }
+    .header p { margin: 8px 0 0; opacity: 0.95; }
+    .card {
+      background: #616161;
+      border: 2px solid #000;
+      border-radius: 12px;
+      padding: 24px;
+    }
+    label { display: block; font-weight: 600; margin-bottom: 6px; margin-top: 14px; }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 2px solid #000;
+      background: #424242;
+      color: #fff;
+    }
+    button {
+      width: 100%;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      background: #ff6f00;
+      color: white;
+      border: 3px solid #000;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover { background: #e65100; }
+    .resultado {
+      margin-top: 20px;
+      padding: 16px;
+      background: #424242;
+      border-radius: 10px;
+      border: 2px solid #000;
+      display: none;
+    }
+    .resultado h3 { margin: 0 0 10px; color: #ffcc80; }
+    .info { font-size: 13px; color: #eee; margin-top: 12px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Calculadora de Custos de Obra</h1>
+      <p>Estimativa de materiais + mão de obra</p>
+    </div>
+
+    <div class="card">
+      <label>Tipo de serviço</label>
+      <select id="servico">
+        <option value="alvenaria">Alvenaria (tijolo/bloco)</option>
+        <option value="reboco">Reboco</option>
+        <option value="pintura">Pintura</option>
+        <option value="piso">Assentamento de Piso</option>
+        <option value="contrapiso">Contrapiso</option>
+      </select>
+
+      <label>Área (m²)</label>
+      <input type="number" id="area" placeholder="Ex: 30" step="0.1" min="0">
+
+      <button onclick="calcular()">Calcular Custo</button>
+
+      <div class="resultado" id="resultado">
+        <h3>Estimativa</h3>
+        <p id="texto"></p>
+      </div>
+
+      <p class="info">Valores médios de referência. Podem variar conforme região e materiais.</p>
+    </div>
+  </div>
+
+  <script>
+    const precos = {
+      alvenaria: { material: 45, mao: 35 },
+      reboco: { material: 18, mao: 28 },
+      pintura: { material: 12, mao: 15 },
+      piso: { material: 40, mao: 30 },
+      contrapiso: { material: 22, mao: 25 }
+    };
+
+    function calcular() {
+      const servico = document.getElementById("servico").value;
+      const area = parseFloat(document.getElementById("area").value) || 0;
+
+      if (area <= 0) {
+        alert("Informe a área corretamente.");
+        return;
+      }
+
+      const p = precos[servico];
+      const custoMaterial = area * p.material;
+      const custoMao = area * p.mao;
+      const total = custoMaterial + custoMao;
+
+      document.getElementById("texto").innerHTML = `
+        <strong>Área:</strong> ${area.toFixed(1)} m²<br><br>
+        Material: R$ ${custoMaterial.toFixed(2)}<br>
+        Mão de obra: R$ ${custoMao.toFixed(2)}<br><br>
+        <strong>Total estimado: R$ ${total.toFixed(2)}</strong>
+      `;
+      document.getElementById("resultado").style.display = "block";
+    }
+  </script>
+</body>
+</html>
