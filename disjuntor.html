@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Disjuntor</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #111;
+      margin: 0;
+      padding: 16px;
+      color: #fff;
+    }
+    .container {
+      max-width: 520px;
+      margin: 0 auto;
+      background: #1a1a1a;
+      border-radius: 16px;
+      border: 1px solid #333;
+      overflow: hidden;
+    }
+    .header {
+      background: #c62828;
+      color: white;
+      padding: 22px 20px;
+      text-align: center;
+    }
+    .header h1 { margin: 0; font-size: 22px; }
+    .header a { color: white; text-decoration: none; font-size: 13px; }
+    .form { padding: 20px; }
+    label { display: block; margin: 14px 0 6px; font-weight: 600; }
+    input, select {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #444;
+      border-radius: 10px;
+      font-size: 16px;
+      background: #222;
+      color: white;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      background: #c62828;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    .resultado {
+      margin: 0 20px 20px;
+      padding: 18px;
+      background: #222;
+      border-radius: 12px;
+      border-left: 5px solid #c62828;
+      display: none;
+    }
+    .resultado h2 { margin: 0 0 10px; color: #ff5252; }
+    .aviso {
+      margin-top: 12px;
+      padding: 10px;
+      background: #2c1a1a;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #ff8a80;
+    }
+    .voltar { display: block; text-align: center; margin: 10px 0 20px; color: #aaa; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Calculadora de Disjuntor</h1>
+      <a href="index.html">← Voltar ao menu</a>
+    </div>
+
+    <div class="form">
+      <label>Potência total do circuito (W)</label>
+      <input type="number" id="potencia" placeholder="Ex: 5000" min="100">
+
+      <label>Tensão</label>
+      <select id="tensao">
+        <option value="127">127 V</option>
+        <option value="220">220 V</option>
+      </select>
+
+      <label>Tipo de carga</label>
+      <select id="tipo">
+        <option value="resistiva">Resistiva (chuveiro, lâmpada, aquecedor)</option>
+        <option value="motor">Motor / Indutiva (bomba, ar-condicionado, motor)</option>
+      </select>
+
+      <button onclick="calcular()">Calcular Disjuntor</button>
+    </div>
+
+    <div class="resultado" id="resultado">
+      <h2>Resultado</h2>
+      <p><strong>Corrente calculada:</strong> <span id="corrente"></span> A</p>
+      <p><strong>Disjuntor recomendado:</strong> <span id="disjuntor"></span> A</p>
+      <p><strong>Tipo:</strong> <span id="tipoDisj"></span></p>
+      <div class="aviso">
+        Sempre use disjuntor com curva adequada (B para residencial comum, C para motores). Em caso de dúvida, consulte um eletricista.
+      </div>
+    </div>
+
+    <a class="voltar" href="index.html">← Voltar ao menu</a>
+  </div>
+
+  <script>
+    function calcular() {
+      const potencia = parseFloat(document.getElementById('potencia').value);
+      const tensao = parseFloat(document.getElementById('tensao').value);
+      const tipo = document.getElementById('tipo').value;
+
+      if (!potencia || potencia < 100) {
+        alert("Informe a potência corretamente.");
+        return;
+      }
+
+      let corrente = potencia / tensao;
+
+      // Fator de segurança
+      if (tipo === "motor") {
+        corrente *= 1.25; // margem para partida
+      } else {
+        corrente *= 1.1;
+      }
+
+      const disjuntores = [10, 16, 20, 25, 32, 40, 50, 63, 80, 100];
+      let disj = 100;
+      for (let d of disjuntores) {
+        if (corrente <= d) {
+          disj = d;
+          break;
+        }
+      }
+
+      const tipoDisj = tipo === "motor" ? "Curva C (recomendado)" : "Curva B ou C";
+
+      document.getElementById('corrente').textContent = corrente.toFixed(1);
+      document.getElementById('disjuntor').textContent = disj;
+      document.getElementById('tipoDisj').textContent = tipoDisj;
+      document.getElementById('resultado').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
