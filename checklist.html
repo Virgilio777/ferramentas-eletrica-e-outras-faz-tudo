@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checklist de Segurança</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #111;
+      margin: 0;
+      padding: 16px;
+      color: #fff;
+    }
+    .container { max-width: 560px; margin: 0 auto; }
+    .header {
+      background: #c62828;
+      padding: 20px;
+      border-radius: 14px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header h1 { margin: 0; font-size: 22px; }
+    .header a { color: white; text-decoration: none; font-size: 14px; }
+    .item {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .item input { margin-top: 4px; transform: scale(1.3); }
+    .item label { flex: 1; line-height: 1.4; }
+    .aviso {
+      background: #2c1a1a;
+      border: 1px solid #c62828;
+      border-radius: 12px;
+      padding: 16px;
+      margin-top: 16px;
+      color: #ff8a80;
+      font-size: 14px;
+    }
+    .voltar { display: block; text-align: center; margin-top: 20px; color: #aaa; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Checklist de Segurança</h1>
+      <a href="index.html">← Voltar ao menu</a>
+    </div>
+
+    <div class="item">
+      <input type="checkbox" id="c1">
+      <label for="c1">Desliguei o disjuntor principal ou o específico do circuito?</label>
+    </div>
+    <div class="item">
+      <input type="checkbox" id="c2">
+      <label for="c2">Testei com a chave de teste / multímetro se realmente está sem energia?</label>
+    </div>
+    <div class="item">
+      <input type="checkbox" id="c3">
+      <label for="c3">Estou usando ferramentas isoladas e calçado adequado?</label>
+    </div>
+    <div class="item">
+      <input type="checkbox" id="c4">
+      <label for="c4">O local está seco e sem risco de contato com água?</label>
+    </div>
+    <div class="item">
+      <input type="checkbox" id="c5">
+      <label for="c5">Sei exatamente o que vou fazer e tenho o material certo?</label>
+    </div>
+    <div class="item">
+      <input type="checkbox" id="c6">
+      <label for="c6">Se for serviço mais complexo (quadro, aterramento, alta potência), considero chamar um eletricista?</label>
+    </div>
+
+    <div class="aviso">
+      Se alguma resposta for "não", é melhor não prosseguir ou chamar um profissional. Segurança em primeiro lugar.
+    </div>
+
+    <a class="voltar" href="index.html">← Voltar ao menu</a>
+  </div>
+</body>
+</html>
