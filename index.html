@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Bitola de Fio</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 { color: #1a73e8; text-align: center; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      background: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    button:hover { background: #1557b0; }
+    .resultado {
+      margin-top: 25px;
+      padding: 20px;
+      background: #e8f0fe;
+      border-radius: 8px;
+      display: none;
+    }
+    .resultado h2 { margin-top: 0; color: #1a73e8; }
+    .aviso { color: #d93025; font-size: 14px; margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Calculadora de Bitola de Fio</h1>
+    
+    <label>Potência do aparelho (W):</label>
+    <input type="number" id="potencia" placeholder="Ex: 7500" min="1">
+
+    <label>Tensão (V):</label>
+    <select id="tensao">
+      <option value="127">127V</option>
+      <option value="220">220V</option>
+    </select>
+
+    <label>Distância (metros) - ida + volta:</label>
+    <input type="number" id="distancia" placeholder="Ex: 15" min="1" step="0.1">
+
+    <label>Tipo de instalação:</label>
+    <select id="tipo">
+      <option value="1.5">Embutido em alvenaria / eletroduto</option>
+      <option value="1.2">Aparente (menos conservador)</option>
+    </select>
+
+    <button onclick="calcular()">Calcular Bitola</button>
+
+    <div class="resultado" id="resultado">
+      <h2>Resultado</h2>
+      <p><strong>Corrente aproximada:</strong> <span id="corrente"></span> A</p>
+      <p><strong>Bitola recomendada:</strong> <span id="bitola"></span> mm²</p>
+      <p><strong>Disjuntor sugerido:</strong> <span id="disjuntor"></span> A</p>
+      <p class="aviso">⚠️ Esta é uma estimativa prática. Sempre consulte a NBR 5410 e um eletricista qualificado para instalações definitivas.</p>
+    </div>
+  </div>
+
+  <script>
+    function calcular() {
+      const potencia = parseFloat(document.getElementById('potencia').value);
+      const tensao = parseFloat(document.getElementById('tensao').value);
+      const distancia = parseFloat(document.getElementById('distancia').value);
+      const fator = parseFloat(document.getElementById('tipo').value);
+
+      if (!potencia || !distancia || potencia <= 0 || distancia <= 0) {
+        alert("Preencha potência e distância corretamente.");
+        return;
+      }
+
+      const corrente = potencia / tensao;
+      
+      // Tabela simplificada de bitola baseada em corrente e distância (método prático)
+      let bitola = 1.5;
+      let disjuntor = 10;
+
+      if (corrente <= 15 && distancia <= 20) { bitola = 1.5; disjuntor = 15; }
+      else if (corrente <= 20 && distancia <= 25) { bitola = 2.5; disjuntor = 20; }
+      else if (corrente <= 30 && distancia <= 30) { bitola = 4; disjuntor = 25; }
+      else if (corrente <= 40 && distancia <= 40) { bitola = 6; disjuntor = 32; }
+      else if (corrente <= 55 && distancia <= 50) { bitola = 10; disjuntor = 40; }
+      else if (corrente <= 70 && distancia <= 60) { bitola = 16; disjuntor = 50; }
+      else { bitola = 25; disjuntor = 63; }
+
+      // Ajuste simples por distância longa
+      if (distancia > 40 && bitola < 10) bitola = Math.max(bitola, 6);
+      if (distancia > 60) bitola = Math.max(bitola, 10);
+
+      document.getElementById('corrente').textContent = corrente.toFixed(1);
+      document.getElementById('bitola').textContent = bitola;
+      document.getElementById('disjuntor').textContent = disjuntor;
+      document.getElementById('resultado').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
