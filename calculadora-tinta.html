@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Tinta</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a2f3d;
+      margin: 0;
+      padding: 20px;
+      color: #e0f7fa;
+    }
+    .container { max-width: 520px; margin: 0 auto; }
+    .header {
+      background: linear-gradient(135deg, #0277bd, #00897b);
+      padding: 28px 20px;
+      border-radius: 16px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .header h1 { margin: 0; font-size: 24px; }
+    .header p { margin: 8px 0 0; opacity: 0.9; }
+    .card {
+      background: #124a5c;
+      border: 1px solid #1e6b7a;
+      border-radius: 12px;
+      padding: 24px;
+    }
+    label { display: block; font-weight: 600; margin-bottom: 6px; margin-top: 12px; }
+    input, select {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #1e6b7a;
+      background: #0d3a4a;
+      color: #e0f7fa;
+    }
+    input:focus, select:focus { outline: none; border-color: #4dd0e1; }
+    button {
+      width: 100%;
+      padding: 16px;
+      font-size: 18px;
+      font-weight: 600;
+      background: #00897b;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover { background: #00796b; }
+    .resultado {
+      margin-top: 20px;
+      padding: 16px;
+      background: #0d3a4a;
+      border-radius: 10px;
+      border: 1px solid #4dd0e1;
+      display: none;
+    }
+    .resultado h3 { margin: 0 0 10px; color: #4dd0e1; }
+    .info { font-size: 13px; color: #b2ebf2; margin-top: 12px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Calculadora de Tinta</h1>
+      <p>Descubra quanta tinta comprar</p>
+    </div>
+
+    <div class="card">
+      <label>Largura da parede (metros)</label>
+      <input type="number" id="largura" placeholder="Ex: 4.5" step="0.1" min="0">
+
+      <label>Altura da parede (metros)</label>
+      <input type="number" id="altura" placeholder="Ex: 2.8" step="0.1" min="0">
+
+      <label>Número de demãos</label>
+      <input type="number" id="demãos" value="2" min="1" max="5">
+
+      <label>Tipo de tinta</label>
+      <select id="tipoTinta">
+        <option value="10">Acrílica (rendimento \~10 m²/L)</option>
+        <option value="8">Latex (rendimento \~8 m²/L)</option>
+        <option value="12">Esmalte (rendimento \~12 m²/L)</option>
+        <option value="7">Tinta para exterior (rendimento \~7 m²/L)</option>
+        <option value="9">Tinta para parede nova (rendimento \~9 m²/L)</option>
+      </select>
+
+      <button onclick="calcular()">Calcular</button>
+
+      <div class="resultado" id="resultado">
+        <h3>Resultado</h3>
+        <p id="textoResultado"></p>
+      </div>
+
+      <p class="info">Os valores são estimativas. Sempre compre um pouco a mais para retoques.</p>
+    </div>
+  </div>
+
+  <script>
+    function calcular() {
+      const largura = parseFloat(document.getElementById("largura").value) || 0;
+      const altura = parseFloat(document.getElementById("altura").value) || 0;
+      const demaos = parseInt(document.getElementById("demãos").value) || 2;
+      const rendimento = parseFloat(document.getElementById("tipoTinta").value);
+
+      if (largura <= 0 || altura <= 0) {
+        alert("Preencha largura e altura corretamente.");
+        return;
+      }
+
+      const area = largura * altura;
+      const litros = (area * demaos) / rendimento;
+      const latas18 = Math.ceil(litros / 18);
+      const galoes36 = Math.ceil(litros / 3.6);
+
+      const texto = `
+        <strong>Área da parede:</strong> ${area.toFixed(2)} m²<br>
+        <strong>Tinta necessária:</strong> ${litros.toFixed(1)} litros<br><br>
+        <strong>Sugestão de compra:</strong><br>
+        • ${latas18} lata(s) de 18 litros<br>
+        ou<br>
+        • ${galoes36} galão(ões) de 3,6 litros
+      `;
+
+      document.getElementById("textoResultado").innerHTML = texto;
+      document.getElementById("resultado").style.display = "block";
+    }
+  </script>
+</body>
+</html>
