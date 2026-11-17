@@ -5,82 +5,128 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Calculadora de Bitola de Fio</title>
   <style>
+    * { box-sizing: border-box; }
     body {
-      font-family: Arial, sans-serif;
-      max-width: 600px;
-      margin: 0 auto;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f0f4f8;
+      margin: 0;
       padding: 20px;
-      background: #f5f5f5;
     }
-    .card {
+    .container {
+      max-width: 520px;
+      margin: 0 auto;
       background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
     }
-    h1 { color: #1a73e8; text-align: center; }
-    label { display: block; margin-top: 15px; font-weight: bold; }
-    input, select {
-      width: 100%;
-      padding: 12px;
-      margin-top: 5px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-    button {
-      width: 100%;
-      padding: 15px;
+    .header {
       background: #1a73e8;
       color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 18px;
+      padding: 24px 20px;
+      text-align: center;
+    }
+    .header h1 { margin: 0; font-size: 22px; }
+    .header p { margin: 8px 0 0; opacity: 0.9; font-size: 14px; }
+    .form { padding: 24px; }
+    label {
+      display: block;
+      margin: 16px 0 6px;
+      font-weight: 600;
+      color: #333;
+      font-size: 14px;
+    }
+    input, select {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      background: #fafafa;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #1a73e8;
+      background: white;
+    }
+    .buttons {
+      display: flex;
+      gap: 10px;
       margin-top: 20px;
+    }
+    button {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
     }
-    button:hover { background: #1557b0; }
+    .btn-calcular { background: #1a73e8; color: white; }
+    .btn-calcular:hover { background: #1557b0; }
+    .btn-limpar { background: #e0e0e0; color: #333; }
     .resultado {
-      margin-top: 25px;
+      margin: 0 24px 24px;
       padding: 20px;
-      background: #e8f0fe;
-      border-radius: 8px;
+      background: #e8f5e9;
+      border-radius: 12px;
+      border-left: 5px solid #34a853;
       display: none;
     }
-    .resultado h2 { margin-top: 0; color: #1a73e8; }
-    .aviso { color: #d93025; font-size: 14px; margin-top: 15px; }
+    .resultado h2 { margin: 0 0 12px; color: #1b5e20; font-size: 18px; }
+    .resultado p { margin: 8px 0; }
+    .aviso {
+      margin-top: 16px;
+      padding: 12px;
+      background: #fff3e0;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #e65100;
+    }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>Calculadora de Bitola de Fio</h1>
-    
-    <label>Potência do aparelho (W):</label>
-    <input type="number" id="potencia" placeholder="Ex: 7500" min="1">
+  <div class="container">
+    <div class="header">
+      <h1>Calculadora de Bitola</h1>
+      <p>Ferramenta prática para faz-tudo e eletricistas</p>
+    </div>
 
-    <label>Tensão (V):</label>
-    <select id="tensao">
-      <option value="127">127V</option>
-      <option value="220">220V</option>
-    </select>
+    <div class="form">
+      <label>Potência do aparelho (W)</label>
+      <input type="number" id="potencia" placeholder="Ex: 7500" min="100">
 
-    <label>Distância (metros) - ida + volta:</label>
-    <input type="number" id="distancia" placeholder="Ex: 15" min="1" step="0.1">
+      <label>Tensão</label>
+      <select id="tensao">
+        <option value="127">127 V</option>
+        <option value="220">220 V</option>
+      </select>
 
-    <label>Tipo de instalação:</label>
-    <select id="tipo">
-      <option value="1.5">Embutido em alvenaria / eletroduto</option>
-      <option value="1.2">Aparente (menos conservador)</option>
-    </select>
+      <label>Distância total (ida + volta) em metros</label>
+      <input type="number" id="distancia" placeholder="Ex: 20" min="1" step="0.5">
 
-    <button onclick="calcular()">Calcular Bitola</button>
+      <label>Tipo de instalação</label>
+      <select id="instalacao">
+        <option value="embutido">Embutido (alvenaria / eletroduto)</option>
+        <option value="aparente">Aparente (menos aquecimento)</option>
+      </select>
+
+      <div class="buttons">
+        <button class="btn-calcular" onclick="calcular()">Calcular</button>
+        <button class="btn-limpar" onclick="limpar()">Limpar</button>
+      </div>
+    </div>
 
     <div class="resultado" id="resultado">
       <h2>Resultado</h2>
-      <p><strong>Corrente aproximada:</strong> <span id="corrente"></span> A</p>
+      <p><strong>Corrente:</strong> <span id="corrente"></span> A</p>
       <p><strong>Bitola recomendada:</strong> <span id="bitola"></span> mm²</p>
       <p><strong>Disjuntor sugerido:</strong> <span id="disjuntor"></span> A</p>
-      <p class="aviso">⚠️ Esta é uma estimativa prática. Sempre consulte a NBR 5410 e um eletricista qualificado para instalações definitivas.</p>
+      <p><strong>Queda de tensão estimada:</strong> <span id="queda"></span>%</p>
+      <div class="aviso">
+        Estimativa prática baseada em valores comuns. Sempre confira a NBR 5410 e considere as condições reais da instalação.
+      </div>
     </div>
   </div>
 
@@ -89,35 +135,62 @@
       const potencia = parseFloat(document.getElementById('potencia').value);
       const tensao = parseFloat(document.getElementById('tensao').value);
       const distancia = parseFloat(document.getElementById('distancia').value);
-      const fator = parseFloat(document.getElementById('tipo').value);
+      const instalacao = document.getElementById('instalacao').value;
 
-      if (!potencia || !distancia || potencia <= 0 || distancia <= 0) {
+      if (!potencia || !distancia || potencia < 100 || distancia < 1) {
         alert("Preencha potência e distância corretamente.");
         return;
       }
 
       const corrente = potencia / tensao;
-      
-      // Tabela simplificada de bitola baseada em corrente e distância (método prático)
-      let bitola = 1.5;
-      let disjuntor = 10;
 
-      if (corrente <= 15 && distancia <= 20) { bitola = 1.5; disjuntor = 15; }
-      else if (corrente <= 20 && distancia <= 25) { bitola = 2.5; disjuntor = 20; }
-      else if (corrente <= 30 && distancia <= 30) { bitola = 4; disjuntor = 25; }
-      else if (corrente <= 40 && distancia <= 40) { bitola = 6; disjuntor = 32; }
-      else if (corrente <= 55 && distancia <= 50) { bitola = 10; disjuntor = 40; }
-      else if (corrente <= 70 && distancia <= 60) { bitola = 16; disjuntor = 50; }
-      else { bitola = 25; disjuntor = 63; }
+      // Tabela prática de bitola (corrente máxima aproximada)
+      const tabela = [
+        { bitola: 1.5, max: 15, disj: 10 },
+        { bitola: 2.5, max: 21, disj: 16 },
+        { bitola: 4,   max: 28, disj: 20 },
+        { bitola: 6,   max: 36, disj: 25 },
+        { bitola: 10,  max: 50, disj: 32 },
+        { bitola: 16,  max: 68, disj: 40 },
+        { bitola: 25,  max: 89, disj: 50 },
+        { bitola: 35,  max: 110, disj: 63 }
+      ];
 
-      // Ajuste simples por distância longa
-      if (distancia > 40 && bitola < 10) bitola = Math.max(bitola, 6);
-      if (distancia > 60) bitola = Math.max(bitola, 10);
+      let escolha = tabela[tabela.length - 1];
+      for (let item of tabela) {
+        if (corrente <= item.max) {
+          escolha = item;
+          break;
+        }
+      }
+
+      // Ajuste por distância (queda de tensão)
+      let fatorDist = 1;
+      if (distancia > 30) fatorDist = 1.2;
+      if (distancia > 50) fatorDist = 1.4;
+      if (distancia > 80) fatorDist = 1.6;
+
+      let bitolaFinal = escolha.bitola;
+      if (fatorDist > 1.1 && bitolaFinal < 6) bitolaFinal = 6;
+      if (fatorDist > 1.3 && bitolaFinal < 10) bitolaFinal = 10;
+      if (fatorDist > 1.5 && bitolaFinal < 16) bitolaFinal = 16;
+
+      // Queda de tensão aproximada (simplificada)
+      const resistencia = (distancia * 0.0175) / (bitolaFinal * 2); // cobre
+      const quedaV = (corrente * resistencia * 2);
+      const quedaPercent = (quedaV / tensao) * 100;
 
       document.getElementById('corrente').textContent = corrente.toFixed(1);
-      document.getElementById('bitola').textContent = bitola;
-      document.getElementById('disjuntor').textContent = disjuntor;
+      document.getElementById('bitola').textContent = bitolaFinal;
+      document.getElementById('disjuntor').textContent = escolha.disj;
+      document.getElementById('queda').textContent = quedaPercent.toFixed(1);
       document.getElementById('resultado').style.display = 'block';
+    }
+
+    function limpar() {
+      document.getElementById('potencia').value = '';
+      document.getElementById('distancia').value = '';
+      document.getElementById('resultado').style.display = 'none';
     }
   </script>
 </body>
